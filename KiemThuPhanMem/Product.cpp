@@ -16,6 +16,7 @@ void Product::set_product_name(const std::string& product_name) {
 
 void Product::set_price(double price) {
     this->price = price;
+    
 }
 
 int Product::get_ID() const {

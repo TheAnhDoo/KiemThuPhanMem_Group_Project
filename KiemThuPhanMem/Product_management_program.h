@@ -1,5 +1,3 @@
-#ifndef PRODUCT_MANAGEMENT_PROGRAM_H
-#define PRODUCT_MANAGEMENT_PROGRAM_H
 
 #include "Product.h"
 #include <vector>
@@ -21,4 +19,3 @@ public:
     bool fileExists(const std::string& filename);
 };
 
-#endif // PRODUCT_MANAGEMENT_PROGRAM_H

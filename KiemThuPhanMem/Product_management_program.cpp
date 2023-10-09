@@ -28,11 +28,38 @@ bool ProductManagementProgram::fileExists(const std::string& filename) {
     return file.good();
 }
 
+//  void ProductManagementProgram::read_product_data() {
+//      // Read product data from the file
+//      std::ifstream file(filename);
+//      if (!file.is_open()) {
+//          std::cerr << "Error: Could not open data file.\n";
+//          return;
+//      }
+
+//      std::string line;
+//      while (std::getline(file, line)) {
+//          std::istringstream ss(line);
+//          std::string id, product_name, price_str;
+//          std::getline(ss, id, ',');
+//          std::getline(ss, product_name, ',');
+//          std::getline(ss, price_str, ',');
+
+//          // Convert string to appropriate types
+//          int product_id = std::stoi(id);
+//          double price = std::stod(price_str);
+
+//          // Create a product and add it to the vector
+//          Product product(product_id, product_name, price);
+//          products.push_back(product);
+//      }
+
+//      file.close();
+//  }
 void ProductManagementProgram::read_product_data() {
     // Read product data from the file
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error: Could not open data file.\n";
+        std::cerr << "Error: Could not open data file for reading.\n";
         return;
     }
 
@@ -40,22 +67,45 @@ void ProductManagementProgram::read_product_data() {
     while (std::getline(file, line)) {
         std::istringstream ss(line);
         std::string id, product_name, price_str;
-        std::getline(ss, id, ',');
-        std::getline(ss, product_name, ',');
-        std::getline(ss, price_str, ',');
 
-        // Convert string to appropriate types
-        int product_id = std::stoi(id);
-        double price = std::stod(price_str);
+        if (std::getline(ss, id, ',') &&
+            std::getline(ss, product_name, ',') &&
+            std::getline(ss, price_str, ',')) {
+            try {
+                // Convert string to appropriate types
+                int product_id = std::stoi(id);
+                double price = std::stod(price_str);
 
-        // Create a product and add it to the vector
-        Product product(product_id, product_name, price);
-        products.push_back(product);
+                // Create a product and add it to the vector
+                Product product(product_id, product_name, price);
+                products.push_back(product);
+            } catch (const std::invalid_argument& e) {
+                std::cerr << "Error: Invalid data format in the file.\n";
+                // Handle the invalid data (skip or take appropriate action)
+            }
+        }
     }
 
     file.close();
 }
 
+
+
+// void ProductManagementProgram::save_product_data() {
+//     std::ofstream file(filename);
+//     if (!file.is_open()) {
+//         std::cerr << "Error: Could not open data file for writing.\n";
+//         return;
+//     }
+
+//     // Write product data to the file
+//     file << "ID,Product Name,Price\n";
+//     for (const Product& product : products) {
+//         file << product.get_ID() << "," << product.get_product_name() << "," << product.get_price() << "\n";
+//     }
+
+//     file.close();
+// }
 void ProductManagementProgram::save_product_data() {
     std::ofstream file(filename);
     if (!file.is_open()) {
@@ -69,9 +119,13 @@ void ProductManagementProgram::save_product_data() {
         file << product.get_ID() << "," << product.get_product_name() << "," << product.get_price() << "\n";
     }
 
+    // Check for errors during write
+    if (file.fail()) {
+        std::cerr << "Error: Failed to write to data file.\n";
+    }
+
     file.close();
 }
-
 void ProductManagementProgram::display_main_menu() {
     int choice = -1;
     while (choice != 0) {
@@ -86,15 +140,19 @@ void ProductManagementProgram::display_main_menu() {
 
         switch (choice) {
             case 1:
+                system("clear");
                 show_all_products();
                 break;
             case 2:
+                system("clear");
                 add_product();
                 break;
             case 3:
+                system("clear");
                 update_product();
                 break;
             case 4:
+                system("clear");
                 delete_product();
                 break;
             case 0:
@@ -138,11 +196,16 @@ void ProductManagementProgram::add_product() {
 
     std::cout << "Price: ";
     std::cin >> price;
+    if(price >= 15000 && price <= 100000){
     product.set_price(price);
 
     products.push_back(product);
     save_product_data();  // Save the product data after adding a new product
     std::cout << "Product added successfully.\n";
+    }
+    else {
+        std::cout << "Invaid price!";
+    }
 }
 
 void ProductManagementProgram::update_product() {
@@ -166,10 +229,14 @@ void ProductManagementProgram::update_product() {
         std::cout << "Price: ";
         double price;
         std::cin >> price;
-        it->set_price(price);
-
-        save_product_data();  // Save the product data after updating
-        std::cout << "Product updated successfully.\n";
+        if(price >= 15000 && price <= 100000){
+            it->set_price(price);
+            save_product_data();  // Save the product data after updating
+            std::cout << "Product updated successfully.\n";
+        }
+       else{
+        std::cout << "Invaid price!";
+       }
     } else {
         std::cout << "Product with ID " << id << " not found.\n";
     }
