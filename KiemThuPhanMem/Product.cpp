@@ -19,11 +19,13 @@ void Product::set_price(double price) {
     
 }
 
-void Product::set_product_details(int ID, std::string product_name, double price) {
+void Product::set_product_details(int ID, const std::string& product_name, double price) {
     this->ID = ID;
     this->product_name = product_name;
     this->price = price;
 }
+
+
 
 int Product::get_ID() const {
     return this->ID;

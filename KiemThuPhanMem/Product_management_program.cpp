@@ -2,6 +2,9 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <map>
+#include "CashPayment.cpp"
+#include "BankPayment.cpp"
 #include "Product_management_program.h"
 
 ProductManagementProgram::ProductManagementProgram() : filename("Products.csv") {
@@ -28,33 +31,6 @@ bool ProductManagementProgram::fileExists(const std::string& filename) {
     return file.good();
 }
 
-//  void ProductManagementProgram::read_product_data() {
-//      // Read product data from the file
-//      std::ifstream file(filename);
-//      if (!file.is_open()) {
-//          std::cerr << "Error: Could not open data file.\n";
-//          return;
-//      }
-
-//      std::string line;
-//      while (std::getline(file, line)) {
-//          std::istringstream ss(line);
-//          std::string id, product_name, price_str;
-//          std::getline(ss, id, ',');
-//          std::getline(ss, product_name, ',');
-//          std::getline(ss, price_str, ',');
-
-//          // Convert string to appropriate types
-//          int product_id = std::stoi(id);
-//          double price = std::stod(price_str);
-
-//          // Create a product and add it to the vector
-//          Product product(product_id, product_name, price);
-//          products.push_back(product);
-//      }
-
-//      file.close();
-//  }
 void ProductManagementProgram::read_product_data() {
     // Read product data from the file
     std::ifstream file(filename);
@@ -90,22 +66,6 @@ void ProductManagementProgram::read_product_data() {
 }
 
 
-
-// void ProductManagementProgram::save_product_data() {
-//     std::ofstream file(filename);
-//     if (!file.is_open()) {
-//         std::cerr << "Error: Could not open data file for writing.\n";
-//         return;
-//     }
-
-//     // Write product data to the file
-//     file << "ID,Product Name,Price\n";
-//     for (const Product& product : products) {
-//         file << product.get_ID() << "," << product.get_product_name() << "," << product.get_price() << "\n";
-//     }
-
-//     file.close();
-// }
 void ProductManagementProgram::save_product_data() {
     std::ofstream file(filename);
     if (!file.is_open()) {
@@ -134,26 +94,34 @@ void ProductManagementProgram::display_main_menu() {
         std::cout << "2. Add a product\n";
         std::cout << "3. Update a product\n";
         std::cout << "4. Delete a product\n";
+        std::cout << "5. Cash Payment\n";
+        std::cout << "6. Bank Payment\n";
         std::cout << "0. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
         switch (choice) {
             case 1:
-                system("cls");
+                system("clear");
                 show_all_products();
                 break;
             case 2:
-                system("cls");
+                system("clear");
                 add_product();
                 break;
             case 3:
-                system("cls");
+                system("clear");
                 update_product();
                 break;
             case 4:
-                system("cls");
+                system("clear");
                 delete_product();
+                break;
+            case 5: 
+                processCashPayment();
+                break;
+            case 6:
+                processBankPayment();
                 break;
             case 0:
                 save_product_data();  // Save data before exiting
@@ -177,70 +145,6 @@ void ProductManagementProgram::show_all_products() const {
     }
 }
 
-// void ProductManagementProgram::add_product() {
-//     Product product;
-
-//     std::cout << "Enter product details:\n";
-//     int id;
-//     std::string product_name;
-//     double price;
-
-//     std::cout << "ID: ";
-//     std::cin >> id;
-//     product.set_ID(id);
-
-//     std::cout << "Product Name: ";
-//     std::cin.ignore();  // Clear the newline from the buffer
-//     std::getline(std::cin, product_name);
-//     product.set_product_name(product_name);
-
-//     std::cout << "Price: ";
-//     std::cin >> price;
-//     if(price >= 15000 && price <= 100000){
-//     product.set_price(price);
-
-//     products.push_back(product);
-//     save_product_data();  // Save the product data after adding a new product
-//     std::cout << "Product added successfully.\n";
-//     }
-//     else {
-//         std::cout << "Invaid price!";
-//     }
-// }
-
-// void ProductManagementProgram::update_product() {
-//     int id;
-//     std::cout << "Enter the ID of the product you want to update: ";
-//     std::cin >> id;
-
-//     auto it = std::find_if(products.begin(), products.end(), [id](const Product& product) {
-//         return product.get_ID() == id;
-//     });
-
-//     if (it != products.end()) {
-//         std::cout << "Enter the updated details:\n";
-
-//         std::cout << "Product Name: ";
-//         std::cin.ignore();  // Clear the newline from the buffer
-//         std::string product_name;
-//         std::getline(std::cin, product_name);
-//         it->set_product_name(product_name);
-
-//         std::cout << "Price: ";
-//         double price;
-//         std::cin >> price;
-//         if(price >= 15000 && price <= 100000){
-//             it->set_price(price);
-//             save_product_data();  // Save the product data after updating
-//             std::cout << "Product updated successfully.\n";
-//         }
-//        else{
-//         std::cout << "Invaid price!";
-//        }
-//     } else {
-//         std::cout << "Product with ID " << id << " not found.\n";
-//     }
-// }
 void ProductManagementProgram::add_product() {
     int id;
     std::cout << "Enter product details:\n";
@@ -339,4 +243,131 @@ void ProductManagementProgram::delete_product() {
     } else {
         std::cout << "Product with ID " << id << " not found.\n";
     }
+}
+
+void ProductManagementProgram::processCashPayment() {
+    std::map<int, int> orderedProductQuantities;
+
+    char addMoreProducts = 'y';
+    while (addMoreProducts == 'y' || addMoreProducts == 'Y') {
+        int productId, quantity;
+
+        // Prompt for product ID and quantity
+        std::cout << "Enter product ID: ";
+        std::cin >> productId;
+     
+        
+        // Check if the product ID exists
+        auto it = std::find_if(products.begin(), products.end(), [productId](const Product& product) {
+            return product.get_ID() == productId;
+        });
+        if (it == products.end()) {
+            // Product ID doesn't exist, prompt to retry or exit
+            std::cout << "Product with ID " << productId << " does not exist. Retry (y/n) or Exit (e/E): ";
+            std::cin >> addMoreProducts;
+
+            // Check if the staff wants to exit
+            if (addMoreProducts == 'e' || addMoreProducts == 'E') {
+                std::cout << "Returning to the main menu.\n";
+                return;
+            }
+
+            continue;
+        }
+
+        std::cout << "Enter product quantity: ";
+        std::cin >> quantity;
+        orderedProductQuantities[productId] = quantity;
+
+        std::cout << "Do you want to add more products? (y/n) or Exit (e/E): ";
+        std::cin >> addMoreProducts;
+
+        // Check if the staff wants to exit
+        if (addMoreProducts == 'e' || addMoreProducts == 'E') {
+            std::cout << "Returning to the main menu.\n";
+            return;
+        }
+    }
+    std::cout << "Total Amount: $" << calculateTotalPrice(orderedProductQuantities, products) << std::endl;
+    double amountPaid;//
+    std::cout << "Enter the amount paid by the customer: $";
+    std::cin >> amountPaid;
+
+    // Display the receipt
+    CashPayment cashPayment(amountPaid, orderedProductQuantities);
+    cashPayment.displayReceipt();
+}
+double ProductManagementProgram::calculateTotalPrice(const std::map<int, int>& orderedProductQuantities, const std::vector<Product>& products) {
+    double totalAmount = 0.0;
+
+    for (const auto& entry : orderedProductQuantities) {
+        int productId = entry.first;
+        int quantity = entry.second;
+
+        auto it = std::find_if(products.begin(), products.end(), [productId](const Product& product) {
+            return product.get_ID() == productId;
+        });
+
+        if (it != products.end()) {
+            double productTotal = it->get_price() * quantity;
+            totalAmount += productTotal;
+        }
+    }//
+
+    return totalAmount;
+}
+
+void ProductManagementProgram::processBankPayment() {
+    std::map<int, int> orderedProductQuantities;
+
+    char addMoreProducts = 'y';
+    while (addMoreProducts == 'y' || addMoreProducts == 'Y') {
+        int productId, quantity;
+
+        // Prompt for product ID and quantity
+        std::cout << "Enter product ID: ";
+        std::cin >> productId;
+
+        // Check if the product ID exists
+        auto it = std::find_if(products.begin(), products.end(), [productId](const Product& product) {
+            return product.get_ID() == productId;
+        });
+
+        if (it == products.end()) {
+            // Product ID doesn't exist, prompt to retry or exit
+            std::cout << "Product with ID " << productId << " does not exist. Retry (y/n) or Exit (e/E): ";
+            std::cin >> addMoreProducts;
+
+            // Check if the staff wants to exit
+            if (addMoreProducts == 'e' || addMoreProducts == 'E') {
+                std::cout << "Returning to the main menu.\n";
+                return;
+            }
+
+            continue;
+        }
+
+        std::cout << "Enter product quantity: ";
+        std::cin >> quantity;
+        orderedProductQuantities[productId] = quantity;
+
+        std::cout << "Do you want to add more products? (y/n) or Exit (e/E): ";
+        std::cin >> addMoreProducts;
+
+        // Check if the staff wants to exit
+        if (addMoreProducts == 'e' || addMoreProducts == 'E') {
+            std::cout << "Returning to the main menu.\n";
+            return;
+        }
+    }
+    double amountPaid = calculateTotalPrice(orderedProductQuantities, products);
+    std::cout << "\nBank Payment Information:\n";
+    std::cout << "Bank Name: XYZ Bank\n";
+    std::cout << "Account Number: 123456789\n";
+    std::cout << "Account Name: Your Store Name\n";
+    std::cout << "Total Amount to Pay: $" << calculateTotalPrice(orderedProductQuantities, products) << std::endl;
+    
+    // Display the receipt
+    BankPayment bankPayment(amountPaid, orderedProductQuantities);
+    bankPayment.displayReceipt();
 }

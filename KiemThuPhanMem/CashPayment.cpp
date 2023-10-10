@@ -1,37 +1,67 @@
-// CashPayment.cpp
 #include "CashPayment.h"
-#include "ProductDatabase.h"
-#include <iostream>
+#include <iomanip>
+#include <fstream>
 
-CashPayment::CashPayment(double amountPaid, const std::vector<std::pair<int, std::string>>& orderedProducts)
-    : Payment(amountPaid, orderedProducts) {}
+CashPayment::CashPayment(double amountPaid, const std::map<int, int>& orderedProductQuantities)
+    : Payment(amountPaid), orderedProductQuantities(orderedProductQuantities) {}
 
-void CashPayment::displayReceipt() const {
-    // Display the receipt for cash payment
-    std::cout << "\nCash Receipt:\n";
+void CashPayment::displayReceipt() const {  
+    std::cout << "\nInvoice:\n";
 
     double totalAmount = 0.0;
 
-    // Calculate total amount and display ordered products
-    for (const auto& orderedProduct : orderedProducts) {
-        int productID = orderedProduct.first;
-        std::string productName = orderedProduct.second;
-        // Fetch product details from the database (ProductDatabase::ProductInfo) and calculate total
-        // ...
+    // Display invoice details
+    std::ifstream file("Products.csv");
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open product data file.\n";
+        return;
+    }
 
-        std::cout << "Product ID: " << productID << ", Product Name: " << productName
-                  << ", Quantity: " << quantity << ", Unit Price: $" << unitPrice
-                  << ", Total Amount: $" << productTotal << std::endl;
+    std::string line;
+    std::getline(file, line);  // Skip the header line
+
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
+        std::string id, product_name, price_str;
+
+        if (std::getline(ss, id, ',') &&
+            std::getline(ss, product_name, ',') &&
+            std::getline(ss, price_str, ',')) {
+            try {
+                int product_id = std::stoi(id);
+                std::string productName = product_name;
+                double productPrice = std::stod(price_str);
+
+                // Check if this product is in the ordered products
+                auto it = orderedProductQuantities.find(product_id);
+
+                if (it != orderedProductQuantities.end()) {
+                    // Product is in the order, display details
+                    int quantity = it->second;
+                    double productTotal = productPrice * quantity;
+                    totalAmount += productTotal;
+
+                    std::cout << "Product ID: " << product_id << ", Product Name: " << productName
+                            << ", Quantity: " << quantity << ", Unit Price: $" << productPrice
+                            << ", Total Amount: $" << productTotal << std::endl;
+                } //else {
+                //     std::cout << "Product with ID " << product_id << " not found. Please retry.\n";
+                //     return;  // Return to main screen
+                // }
+            } catch (const std::invalid_argument& e) {
+                std::cerr << "Error: Invalid data format in the product data file.\n";
+            }
+        }
     }
 
     std::cout << "Total Amount: $" << totalAmount << std::endl;
     std::cout << "Amount Paid: $" << amountPaid << std::endl;
 
-    // Calculate and display change
-    if (amountPaid >= totalAmount) {
-        double change = amountPaid - totalAmount;
-        std::cout << "Change: $" << change << std::endl;
+    // Calculate change
+    double change = amountPaid - totalAmount;
+    if (change >= 0) {
+        std::cout << "Change: $" << std::fixed << std::setprecision(2) << change << std::endl;
     } else {
-        std::cout << "Insufficient payment. Please provide additional funds." << std::endl;
+        std::cout << "Failed to pay. Insufficient funds." << std::endl;
     }
 }

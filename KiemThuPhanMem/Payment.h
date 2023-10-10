@@ -1,15 +1,15 @@
-// Payment.h
-#pragma once
-#include <string>
-#include <vector>
+#ifndef PAYMENT_H
+#define PAYMENT_H
+#include <iostream>
 
 class Payment {
 protected:
     double amountPaid;
-    std::vector<std::pair<int, std::string>> orderedProducts;  // ID and name of ordered products
 
 public:
-    Payment(double amountPaid, const std::vector<std::pair<int, std::string>>& orderedProducts);
-    virtual void displayReceipt() const = 0;  // Make it a pure virtual function
-    double getAmountPaid() const;
+    Payment(double amountPaid);
+    virtual ~Payment() = default;
+    virtual void displayReceipt() const = 0;
 };
+
+#endif // PAYMENT_H

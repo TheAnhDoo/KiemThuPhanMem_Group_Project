@@ -1,4 +1,5 @@
-
+#ifndef PRODUCT_MANAGEMENT_PROGRAM_H
+#define PRODUCT_MANAGEMENT_PROGRAM_H
 #include "Product.h"
 #include <vector>
 
@@ -17,5 +18,9 @@ public:
     void update_product();
     void delete_product();
     bool fileExists(const std::string& filename);
+    void processCashPayment(); //test
+    void processBankPayment();
+    double calculateTotalPrice(const std::map<int, int>& orderedProductQuantities, const std::vector<Product>& products);
 };
 
+#endif // PRODUCT_MANAGEMENT_PROGRAM_H

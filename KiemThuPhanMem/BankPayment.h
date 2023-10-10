@@ -1,14 +1,14 @@
 // BankPayment.h
-#pragma once
+#ifndef BANKPAYMENT_H
+#define BANKPAYMENT_H
 #include "Payment.h"
-
+#include <map>
 class BankPayment : public Payment {
 private:
-    std::string bankName;
-    std::string accountNumber;
-
+    std::map<int, int> orderedProductQuantities;
 public:
-    BankPayment(double amountPaid, const std::vector<std::pair<int, std::string>>& orderedProducts,
-                const std::string& bankName, const std::string& accountNumber);
+    BankPayment(double amountPaid, const std::map<int, int>& orderedProductQuantities);
     void displayReceipt() const override;
 };
+
+#endif // BANKPAYMENT_H
