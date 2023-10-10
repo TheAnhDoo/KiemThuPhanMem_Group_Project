@@ -140,19 +140,19 @@ void ProductManagementProgram::display_main_menu() {
 
         switch (choice) {
             case 1:
-                system("clear");
+                system("cls");
                 show_all_products();
                 break;
             case 2:
-                system("clear");
+                system("cls");
                 add_product();
                 break;
             case 3:
-                system("clear");
+                system("cls");
                 update_product();
                 break;
             case 4:
-                system("clear");
+                system("cls");
                 delete_product();
                 break;
             case 0:
@@ -177,34 +177,103 @@ void ProductManagementProgram::show_all_products() const {
     }
 }
 
+// void ProductManagementProgram::add_product() {
+//     Product product;
+
+//     std::cout << "Enter product details:\n";
+//     int id;
+//     std::string product_name;
+//     double price;
+
+//     std::cout << "ID: ";
+//     std::cin >> id;
+//     product.set_ID(id);
+
+//     std::cout << "Product Name: ";
+//     std::cin.ignore();  // Clear the newline from the buffer
+//     std::getline(std::cin, product_name);
+//     product.set_product_name(product_name);
+
+//     std::cout << "Price: ";
+//     std::cin >> price;
+//     if(price >= 15000 && price <= 100000){
+//     product.set_price(price);
+
+//     products.push_back(product);
+//     save_product_data();  // Save the product data after adding a new product
+//     std::cout << "Product added successfully.\n";
+//     }
+//     else {
+//         std::cout << "Invaid price!";
+//     }
+// }
+
+// void ProductManagementProgram::update_product() {
+//     int id;
+//     std::cout << "Enter the ID of the product you want to update: ";
+//     std::cin >> id;
+
+//     auto it = std::find_if(products.begin(), products.end(), [id](const Product& product) {
+//         return product.get_ID() == id;
+//     });
+
+//     if (it != products.end()) {
+//         std::cout << "Enter the updated details:\n";
+
+//         std::cout << "Product Name: ";
+//         std::cin.ignore();  // Clear the newline from the buffer
+//         std::string product_name;
+//         std::getline(std::cin, product_name);
+//         it->set_product_name(product_name);
+
+//         std::cout << "Price: ";
+//         double price;
+//         std::cin >> price;
+//         if(price >= 15000 && price <= 100000){
+//             it->set_price(price);
+//             save_product_data();  // Save the product data after updating
+//             std::cout << "Product updated successfully.\n";
+//         }
+//        else{
+//         std::cout << "Invaid price!";
+//        }
+//     } else {
+//         std::cout << "Product with ID " << id << " not found.\n";
+//     }
+// }
 void ProductManagementProgram::add_product() {
-    Product product;
-
-    std::cout << "Enter product details:\n";
     int id;
-    std::string product_name;
-    double price;
-
+    std::cout << "Enter product details:\n";
     std::cout << "ID: ";
     std::cin >> id;
-    product.set_ID(id);
+
+    // Check if a product with the given ID already exists
+    auto it = std::find_if(products.begin(), products.end(), [id](const Product& product) {
+        return product.get_ID() == id;
+    });
+
+    if (it != products.end()) {
+        std::cout << "A product with ID " << id << " already exists. Failed to add a new product.\n";
+        return;
+    }
+
+    std::string product_name;
+    double price;
 
     std::cout << "Product Name: ";
     std::cin.ignore();  // Clear the newline from the buffer
     std::getline(std::cin, product_name);
-    product.set_product_name(product_name);
 
     std::cout << "Price: ";
     std::cin >> price;
-    if(price >= 15000 && price <= 100000){
-    product.set_price(price);
 
-    products.push_back(product);
-    save_product_data();  // Save the product data after adding a new product
-    std::cout << "Product added successfully.\n";
-    }
-    else {
-        std::cout << "Invaid price!";
+    if (price >= 15000 && price <= 100000) {
+        Product product(id, product_name, price);
+        products.push_back(product);
+        save_product_data();  // Save the product data after adding a new product
+        std::cout << "Product added successfully.\n";
+    } else {
+        std::cout << "Invalid price!\n";
     }
 }
 
@@ -213,32 +282,33 @@ void ProductManagementProgram::update_product() {
     std::cout << "Enter the ID of the product you want to update: ";
     std::cin >> id;
 
+    // Check if a product with the given ID exists for updating
     auto it = std::find_if(products.begin(), products.end(), [id](const Product& product) {
         return product.get_ID() == id;
     });
 
-    if (it != products.end()) {
-        std::cout << "Enter the updated details:\n";
+    if (it == products.end()) {
+        std::cout << "Product with ID " << id << " not found. Failed to update.\n";
+        return;
+    }
 
-        std::cout << "Product Name: ";
-        std::cin.ignore();  // Clear the newline from the buffer
-        std::string product_name;
-        std::getline(std::cin, product_name);
-        it->set_product_name(product_name);
+    std::cout << "Enter the updated details:\n";
 
-        std::cout << "Price: ";
-        double price;
-        std::cin >> price;
-        if(price >= 15000 && price <= 100000){
-            it->set_price(price);
-            save_product_data();  // Save the product data after updating
-            std::cout << "Product updated successfully.\n";
-        }
-       else{
-        std::cout << "Invaid price!";
-       }
+    std::cout << "Product Name: ";
+    std::cin.ignore();  // Clear the newline from the buffer
+    std::string product_name;
+    std::getline(std::cin, product_name);
+
+    std::cout << "Price: ";
+    double price;
+    std::cin >> price;
+
+    if (price >= 15000 && price <= 100000) {
+        it->set_product_details(id, product_name, price);
+        save_product_data();  // Save the product data after updating
+        std::cout << "Product updated successfully.\n";
     } else {
-        std::cout << "Product with ID " << id << " not found.\n";
+        std::cout << "Invalid price!\n";
     }
 }
 
@@ -247,14 +317,25 @@ void ProductManagementProgram::delete_product() {
     std::cout << "Enter the ID of the product you want to delete: ";
     std::cin >> id;
 
-    auto it = std::remove_if(products.begin(), products.end(), [id](const Product& product) {
+    auto it = std::find_if(products.begin(), products.end(), [id](const Product& product) {
         return product.get_ID() == id;
     });
 
     if (it != products.end()) {
-        products.erase(it, products.end());
-        save_product_data();  // Save the product data after deletion
-        std::cout << "Product deleted successfully.\n";
+        std::cout << "Product found:\n";
+        it->display();
+
+        std::cout << "Are you sure you want to delete this product? (y/n): ";
+        char choice;
+        std::cin >> choice;
+
+        if (tolower(choice) == 'y') {
+            products.erase(it);
+            save_product_data();  // Save the product data after deletion
+            std::cout << "Product deleted successfully.\n";
+        } else {
+            std::cout << "Deletion canceled.\n";
+        }
     } else {
         std::cout << "Product with ID " << id << " not found.\n";
     }
