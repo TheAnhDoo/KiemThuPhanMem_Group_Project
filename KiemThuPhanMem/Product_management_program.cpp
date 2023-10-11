@@ -190,6 +190,8 @@ void ProductManagementProgram::update_product() {
     auto it = std::find_if(products.begin(), products.end(), [id](const Product& product) {
         return product.get_ID() == id;
     });
+    
+    it->display();
 
     if (it == products.end()) {
         std::cout << "Product with ID " << id << " not found. Failed to update.\n";
