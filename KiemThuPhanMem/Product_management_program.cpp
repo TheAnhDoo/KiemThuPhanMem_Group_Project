@@ -86,60 +86,132 @@ void ProductManagementProgram::save_product_data() {
 
     file.close();
 }
+// void ProductManagementProgram::display_main_menu() {
+//     int choice = -1;
+//     while (choice != 0) {
+//         std::cout << "\nMain Menu:\n";
+//         std::cout << "1. Show all products\n";
+//         std::cout << "2. Add a product\n";
+//         std::cout << "3. Update a product\n";
+//         std::cout << "4. Delete a product\n";
+//         std::cout << "5. Cash Payment\n";
+//         std::cout << "6. Bank Payment\n";
+//         std::cout << "0. Exit\n";
+//         std::cout << "Enter your choice: ";
+//         std::cin >> choice;
+
+//         switch (choice) {
+//             case 1:
+//                 system("clear");
+//                 show_all_products();
+//                 break;
+//             case 2:
+//                 system("clear");
+//                 add_product();
+//                 break;
+//             case 3:
+//                 system("clear");
+//                 update_product();
+//                 break;
+//             case 4:
+//                 system("clear");
+//                 delete_product();
+//                 break;
+//             case 5: 
+//                 processCashPayment();
+//                 break;
+//             case 6:
+//                 processBankPayment();
+//                 break;
+//             case 0:
+//                 save_product_data();  // Save data before exiting
+//                 std::cout << "Exiting the program.\n";
+//                 break;
+//             default:
+//                 std::cout << "Invalid choice. Please try again.\n";
+//         }
+//     }
+// }
+
 void ProductManagementProgram::display_main_menu() {
     int choice = -1;
     while (choice != 0) {
-        std::cout << "\nMain Menu:\n";
-        std::cout << "1. Show all products\n";
-        std::cout << "2. Add a product\n";
-        std::cout << "3. Update a product\n";
-        std::cout << "4. Delete a product\n";
-        std::cout << "5. Cash Payment\n";
-        std::cout << "6. Bank Payment\n";
-        std::cout << "0. Exit\n";
-        std::cout << "Enter your choice: ";
+        std::cout << "\nChuong trinh quan ly cua hang Cafe:\n";
+        std::cout << "1. Quan ly san pham\n";
+        std::cout << "2. Thanh toan\n";
+        std::cout << "0. Thoat\n";
+        std::cout << "Nhap lua chon cua ban: ";
         std::cin >> choice;
 
         switch (choice) {
             case 1:
-                system("clear");
-                show_all_products();
+                std::cout << "Quan ly san pham:\n";
+                std::cout << "1. Xem tat ca san pham\n";
+                std::cout << "2. Them san pham\n";
+                std::cout << "3. Cap nhat san pham\n";
+                std::cout << "4. Xoa san pham\n";
+                std::cout << "0. Quay lai menu chinh\n";
+                int productMenuChoice;
+                std::cout << "Nhap lua chon cua ban: ";
+                std::cin >> productMenuChoice;
+                switch (productMenuChoice) {
+                    case 1:
+                        show_all_products();
+                        break;
+                    case 2:
+                        add_product();
+                        break;
+                    case 3:
+                        update_product();
+                        break;
+                    case 4:
+                        delete_product();
+                        break;
+                    case 0:
+                        break;
+                    default:
+                        std::cout << "Lua chon khong hop le. Vui long thu lai.\n";
+                }
                 break;
             case 2:
-                system("clear");
-                add_product();
-                break;
-            case 3:
-                system("clear");
-                update_product();
-                break;
-            case 4:
-                system("clear");
-                delete_product();
-                break;
-            case 5: 
-                processCashPayment();
-                break;
-            case 6:
-                processBankPayment();
+                system("cls");
+                std::cout << "1. Thanh toan tien mat\n";
+                std::cout << "2. Thanh toan qua ngan hang\n";
+                std::cout << "0. Quay lai Menu chinh\n";
+                int paymentChoice;
+                std::cout << "Nhap lua chon của ban: ";
+                std::cin >> paymentChoice;
+                switch (paymentChoice) {
+                    case 1:
+                        processCashPayment();
+                        break;
+                    case 2:
+                        processBankPayment();
+                        break;
+                    case 0:
+                        break;
+                    default:
+                        std::cout << "Lua chon khong hop le. Vui long thu lai.\n";
+                }
                 break;
             case 0:
-                save_product_data();  // Save data before exiting
-                std::cout << "Exiting the program.\n";
+                save_product_data();  // Lưu dữ liệu trước khi thoát
+                std::cout << "Dang thoat ra khoi chuong trinh.\n";
                 break;
             default:
-                std::cout << "Invalid choice. Please try again.\n";
+                std::cout << "Lua chon khong hop le. Vui long thu lai.\n";
         }
     }
 }
 
+
 void ProductManagementProgram::show_all_products() const {
     if (products.empty()) {
-        std::cout << "No products available.\n";
+        std::cout << "Khong co san pham nao ton tai.\n";
         return;
     }
 
-    std::cout << "All Products:\n";
+    std::cout << "Danh sach san pham:\n";
     for (const Product& product : products) {
         product.display();
     }
@@ -147,7 +219,7 @@ void ProductManagementProgram::show_all_products() const {
 
 void ProductManagementProgram::add_product() {
     int id;
-    std::cout << "Enter product details:\n";
+    std::cout << "Nhap thong tin san pham:\n";
     std::cout << "ID: ";
     std::cin >> id;
 
@@ -157,33 +229,33 @@ void ProductManagementProgram::add_product() {
     });
 
     if (it != products.end()) {
-        std::cout << "A product with ID " << id << " already exists. Failed to add a new product.\n";
+        std::cout << "San pham voi ID " << id << " da ton tai. Them moi san pham khong thanh cong.\n";
         return;
     }
 
     std::string product_name;
     double price;
 
-    std::cout << "Product Name: ";
+    std::cout << "Ten san pham: ";
     std::cin.ignore();  // Clear the newline from the buffer
     std::getline(std::cin, product_name);
 
-    std::cout << "Price: ";
+    std::cout << "Don gia san pham: ";
     std::cin >> price;
 
     if (price >= 15000 && price <= 100000) {
         Product product(id, product_name, price);
         products.push_back(product);
         save_product_data();  // Save the product data after adding a new product
-        std::cout << "Product added successfully.\n";
+        std::cout << "Da them san pham moi thanh cong.\n";
     } else {
-        std::cout << "Invalid price!\n";
+        std::cout << "Vui long nhap lai, muc gia cho phep cua san pham la [15000,100000]!\n";
     }
 }
 
 void ProductManagementProgram::update_product() {
     int id;
-    std::cout << "Enter the ID of the product you want to update: ";
+    std::cout << "Nhap ID cua san pham ban muon chinh sua: ";
     std::cin >> id;
 
     // Check if a product with the given ID exists for updating
@@ -194,33 +266,34 @@ void ProductManagementProgram::update_product() {
     it->display();
 
     if (it == products.end()) {
-        std::cout << "Product with ID " << id << " not found. Failed to update.\n";
+        std::cout << "San pham voi ID: " << id << " khong ton tai. Cap nhat san pham khong thanh cong.\n";
         return;
     }
 
-    std::cout << "Enter the updated details:\n";
+    std::cout << "San pham voi ID: " << id << "tim thay thanh cong.\n";
+    std::cout << "Nhap thong tin moi cua san pham:\n";
 
-    std::cout << "Product Name: ";
+    std::cout << "Ten san pham: ";
     std::cin.ignore();  // Clear the newline from the buffer
     std::string product_name;
     std::getline(std::cin, product_name);
 
-    std::cout << "Price: ";
+    std::cout << "Don gia cua san pham: ";
     double price;
     std::cin >> price;
 
     if (price >= 15000 && price <= 100000) {
         it->set_product_details(id, product_name, price);
         save_product_data();  // Save the product data after updating
-        std::cout << "Product updated successfully.\n";
+        std::cout << "San pham da duoc cap nhat thanh cong.\n";
     } else {
-        std::cout << "Invalid price!\n";
+        std::cout << "Vui long nhap lai, muc gia cho phep cua san pham la [15000,100000]!\n";
     }
 }
 
 void ProductManagementProgram::delete_product() {
     int id;
-    std::cout << "Enter the ID of the product you want to delete: ";
+    std::cout << "Nhap ID cua san pham ban muon xoa: ";
     std::cin >> id;
 
     auto it = std::find_if(products.begin(), products.end(), [id](const Product& product) {
@@ -228,22 +301,22 @@ void ProductManagementProgram::delete_product() {
     });
 
     if (it != products.end()) {
-        std::cout << "Product found:\n";
+        std::cout << "San pham khong ton tai:\n";
         it->display();
 
-        std::cout << "Are you sure you want to delete this product? (y/n): ";
+        std::cout << "Ban co chac chan muon xoa san pham nay khong? (y/n): ";
         char choice;
         std::cin >> choice;
 
         if (tolower(choice) == 'y') {
             products.erase(it);
             save_product_data();  // Save the product data after deletion
-            std::cout << "Product deleted successfully.\n";
+            std::cout << "Da xoa san pham thanh cong.\n";
         } else {
-            std::cout << "Deletion canceled.\n";
+            std::cout << "Da huy viec xoa san pham.\n";
         }
     } else {
-        std::cout << "Product with ID " << id << " not found.\n";
+        std::cout << "San pham voi ID " << id << " khong ton tai.\n";
     }
 }
 
@@ -255,7 +328,7 @@ void ProductManagementProgram::processCashPayment() {
         int productId, quantity;
 
         // Prompt for product ID and quantity
-        std::cout << "Enter product ID: ";
+        std::cout << "Nhap ID cua san pham: ";
         std::cin >> productId;
      
         
@@ -265,34 +338,34 @@ void ProductManagementProgram::processCashPayment() {
         });
         if (it == products.end()) {
             // Product ID doesn't exist, prompt to retry or exit
-            std::cout << "Product with ID " << productId << " does not exist. Retry (y/n) or Exit (e/E): ";
+            std::cout << "San pham voi ID " << productId << " khong ton tai. Thu lai (y/n) hoac Thoat (e/E): ";
             std::cin >> addMoreProducts;
 
             // Check if the staff wants to exit
             if (addMoreProducts == 'e' || addMoreProducts == 'E') {
-                std::cout << "Returning to the main menu.\n";
+                std::cout << "Dang tro lai man hinh chinh.\n";
                 return;
             }
 
             continue;
         }
 
-        std::cout << "Enter product quantity: ";
+        std::cout << "Nhap so luong san pham khach mua: ";
         std::cin >> quantity;
         orderedProductQuantities[productId] = quantity;
 
-        std::cout << "Do you want to add more products? (y/n) or Exit (e/E): ";
+        std::cout << "Ban co muon them san pham nao nua khong? (y/n) hoac Thoat (e/E): ";
         std::cin >> addMoreProducts;
 
         // Check if the staff wants to exit
         if (addMoreProducts == 'e' || addMoreProducts == 'E') {
-            std::cout << "Returning to the main menu.\n";
+            std::cout << "Dang tro lai man hinh chinh.\n";
             return;
         }
     }
-    std::cout << "Total Amount: $" << calculateTotalPrice(orderedProductQuantities, products) << std::endl;
+    std::cout << "Tong tien: $" << calculateTotalPrice(orderedProductQuantities, products) << std::endl;
     double amountPaid;//
-    std::cout << "Enter the amount paid by the customer: $";
+    std::cout << "Nhap so tien khach hang tra: $";
     std::cin >> amountPaid;
 
     // Display the receipt
@@ -327,7 +400,7 @@ void ProductManagementProgram::processBankPayment() {
         int productId, quantity;
 
         // Prompt for product ID and quantity
-        std::cout << "Enter product ID: ";
+        std::cout << "Nhap ID san pham: ";
         std::cin >> productId;
 
         // Check if the product ID exists
@@ -337,37 +410,37 @@ void ProductManagementProgram::processBankPayment() {
 
         if (it == products.end()) {
             // Product ID doesn't exist, prompt to retry or exit
-            std::cout << "Product with ID " << productId << " does not exist. Retry (y/n) or Exit (e/E): ";
+            std::cout << "San pham voi ID " << productId << " khong ton tai. Thu lai (y/n) hoac Thoat (e/E): ";
             std::cin >> addMoreProducts;
 
             // Check if the staff wants to exit
             if (addMoreProducts == 'e' || addMoreProducts == 'E') {
-                std::cout << "Returning to the main menu.\n";
+                std::cout << "Dang tro lai man hinh chinh.\n";
                 return;
             }
 
             continue;
         }
 
-        std::cout << "Enter product quantity: ";
+        std::cout << "Nhap so luong san pham khach mua: ";
         std::cin >> quantity;
         orderedProductQuantities[productId] = quantity;
 
-        std::cout << "Do you want to add more products? (y/n) or Exit (e/E): ";
+        std::cout << "Ban co muon them san pham nao nua khong? (y/n) hoac Thoat (e/E): ";
         std::cin >> addMoreProducts;
 
         // Check if the staff wants to exit
         if (addMoreProducts == 'e' || addMoreProducts == 'E') {
-            std::cout << "Returning to the main menu.\n";
+            std::cout << "Dang tro lai man hinh chinh.\n";
             return;
         }
     }
     double amountPaid = calculateTotalPrice(orderedProductQuantities, products);
-    std::cout << "\nBank Payment Information:\n";
-    std::cout << "Bank Name: XYZ Bank\n";
-    std::cout << "Account Number: 123456789\n";
-    std::cout << "Account Name: Your Store Name\n";
-    std::cout << "Total Amount to Pay: $" << calculateTotalPrice(orderedProductQuantities, products) << std::endl;
+    std::cout << "\nThong tin ngan hang cua cua hang:\n";
+    std::cout << "Bank Name: Vietcombank\n";
+    std::cout << "Account Number: 101699996\n";
+    std::cout << "Account Name: Do The Anh\n";
+    std::cout << "Tong so tien can thanh toan: $" << calculateTotalPrice(orderedProductQuantities, products) << std::endl;
     
     // Display the receipt
     BankPayment bankPayment(amountPaid, orderedProductQuantities);
