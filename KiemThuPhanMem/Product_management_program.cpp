@@ -179,7 +179,7 @@ void ProductManagementProgram::display_main_menu() {
                 std::cout << "2. Thanh toan qua ngan hang\n";
                 std::cout << "0. Quay lai Menu chinh\n";
                 int paymentChoice;
-                std::cout << "Nhap lua chon của ban: ";
+                std::cout << "Nhap lua chon cua ban: ";
                 std::cin >> paymentChoice;
                 switch (paymentChoice) {
                     case 1:
