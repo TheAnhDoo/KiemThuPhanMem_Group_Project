@@ -86,52 +86,7 @@ void ProductManagementProgram::save_product_data() {
 
     file.close();
 }
-// void ProductManagementProgram::display_main_menu() {
-//     int choice = -1;
-//     while (choice != 0) {
-//         std::cout << "\nMain Menu:\n";
-//         std::cout << "1. Show all products\n";
-//         std::cout << "2. Add a product\n";
-//         std::cout << "3. Update a product\n";
-//         std::cout << "4. Delete a product\n";
-//         std::cout << "5. Cash Payment\n";
-//         std::cout << "6. Bank Payment\n";
-//         std::cout << "0. Exit\n";
-//         std::cout << "Enter your choice: ";
-//         std::cin >> choice;
 
-//         switch (choice) {
-//             case 1:
-//                 system("clear");
-//                 show_all_products();
-//                 break;
-//             case 2:
-//                 system("clear");
-//                 add_product();
-//                 break;
-//             case 3:
-//                 system("clear");
-//                 update_product();
-//                 break;
-//             case 4:
-//                 system("clear");
-//                 delete_product();
-//                 break;
-//             case 5: 
-//                 processCashPayment();
-//                 break;
-//             case 6:
-//                 processBankPayment();
-//                 break;
-//             case 0:
-//                 save_product_data();  // Save data before exiting
-//                 std::cout << "Exiting the program.\n";
-//                 break;
-//             default:
-//                 std::cout << "Invalid choice. Please try again.\n";
-//         }
-//     }
-// }
 
 void ProductManagementProgram::display_main_menu() {
     int choice = -1;
