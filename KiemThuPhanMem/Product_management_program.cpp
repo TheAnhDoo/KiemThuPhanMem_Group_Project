@@ -161,14 +161,27 @@ void ProductManagementProgram::display_main_menu() {
 
 
 void ProductManagementProgram::show_all_products() const {
-    if (products.empty()) {
+if (products.empty()) {
         std::cout << "Khong co san pham nao ton tai.\n";
         return;
     }
 
-    std::cout << "Danh sach san pham:\n";
-    for (const Product& product : products) {
-        product.display();
+    int searchId;
+    std::cout << "Nhap ID san pham can tim: ";
+    std::cin >> searchId;
+
+    auto it = std::find_if(products.begin(), products.end(), [searchId](const Product& product) {
+        return product.get_ID() == searchId;
+    });
+    if (searchId <= 0) {
+        std::cout << "ID khong hop le, xem san pham khong thanh cong.\n";
+        return;
+    }
+    if (it != products.end()) {
+        std::cout << "San pham co ID " << searchId << " ton tai:\n";
+        it->display();
+    } else {
+        std::cout << "San pham voi ID " << searchId << " khong ton tai.\n";
     }
 }
 

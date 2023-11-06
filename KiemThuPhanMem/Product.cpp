@@ -41,6 +41,6 @@ double Product::get_price() const {
 
 void Product::display() const {
     std::cout << "ID: " << this->ID << std::endl;
-    std::cout << "Name: " << this->product_name << std::endl;
-    std::cout << "Price: " << this->price << std::endl;
+    std::cout << "Ten san pham: " << this->product_name << std::endl;
+    std::cout << "Don gia: " << this->price << std::endl;
 }
