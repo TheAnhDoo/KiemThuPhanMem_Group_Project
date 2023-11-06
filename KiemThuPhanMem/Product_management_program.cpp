@@ -227,7 +227,10 @@ void ProductManagementProgram::update_product() {
         std::cout << "San pham voi ID: " << id << " khong ton tai. Cap nhat san pham khong thanh cong.\n";
         return;
     }
-
+    if (id <= 0) {
+        std::cout << "ID khong hop le, cap nhat san pham khong thanh cong.\n";
+        return;
+    }
 
     std::cout << "San pham voi ID: " << id << "tim thay thanh cong.\n";
     std::cout << "Nhap thong tin moi cua san pham:\n";
@@ -262,7 +265,10 @@ void ProductManagementProgram::delete_product() {
     if (it != products.end()) {
         std::cout << "San pham khong ton tai:\n";
         it->display();
-
+    if (id <= 0) {
+        std::cout << "ID khong hop le, xoa san pham khong thanh cong.\n";
+        return;
+    }
         std::cout << "Ban co chac chan muon xoa san pham nay khong? (y/n): ";
         char choice;
         std::cin >> choice;
