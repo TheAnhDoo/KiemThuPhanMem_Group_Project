@@ -187,7 +187,10 @@ void ProductManagementProgram::add_product() {
         std::cout << "San pham voi ID " << id << " da ton tai. Them moi san pham khong thanh cong.\n";
         return;
     }
-
+    if (id <= 0) {
+        std::cout << "ID khong hop le, them moi san pham khong thanh cong.\n";
+        return;
+    }
     std::string product_name;
     double price;
 
@@ -224,6 +227,7 @@ void ProductManagementProgram::update_product() {
         std::cout << "San pham voi ID: " << id << " khong ton tai. Cap nhat san pham khong thanh cong.\n";
         return;
     }
+
 
     std::cout << "San pham voi ID: " << id << "tim thay thanh cong.\n";
     std::cout << "Nhap thong tin moi cua san pham:\n";
@@ -392,9 +396,9 @@ void ProductManagementProgram::processBankPayment() {
     }
     double amountPaid = calculateTotalPrice(orderedProductQuantities, products);
     std::cout << "\nThong tin ngan hang cua cua hang:\n";
-    std::cout << "Bank Name: Vietcombank\n";
-    std::cout << "Account Number: 101699996\n";
-    std::cout << "Account Name: Do The Anh\n";
+    std::cout << "Ten ngan hang: Vietcombank\n";
+    std::cout << "So tai khoan: 101699996\n";
+    std::cout << "Ten chu ngan hang: Do The Anh\n";
     std::cout << "Tong so tien can thanh toan: $" << calculateTotalPrice(orderedProductQuantities, products) << std::endl;
     
     // Display the receipt

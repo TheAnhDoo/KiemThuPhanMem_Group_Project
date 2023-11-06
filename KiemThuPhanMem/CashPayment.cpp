@@ -6,7 +6,7 @@ CashPayment::CashPayment(double amountPaid, const std::map<int, int>& orderedPro
     : Payment(amountPaid), orderedProductQuantities(orderedProductQuantities) {}
 
 void CashPayment::displayReceipt() const {  
-    std::cout << "\nInvoice:\n";
+    std::cout << "\nHoa don:\n";
 
     double totalAmount = 0.0;
 
@@ -41,9 +41,9 @@ void CashPayment::displayReceipt() const {
                     double productTotal = productPrice * quantity;
                     totalAmount += productTotal;
 
-                    std::cout << "Product ID: " << product_id << ", Product Name: " << productName
-                            << ", Quantity: " << quantity << ", Unit Price: $" << productPrice
-                            << ", Total Amount: $" << productTotal << std::endl;
+                    std::cout << "ID san pham: " << product_id << ", Ten san pham: " << productName
+                            << ", So luong san pham: " << quantity << ", Don gia: $" << productPrice
+                            << ", Tong tien: $" << productTotal << std::endl;
                 } //else {
                 //     std::cout << "Product with ID " << product_id << " not found. Please retry.\n";
                 //     return;  // Return to main screen
@@ -54,14 +54,14 @@ void CashPayment::displayReceipt() const {
         }
     }
 
-    std::cout << "Total Amount: $" << totalAmount << std::endl;
-    std::cout << "Amount Paid: $" << amountPaid << std::endl;
+    std::cout << "Tong tien: $" << totalAmount << std::endl;
+    std::cout << "So tien khach tra: $" << amountPaid << std::endl;
 
     // Calculate change
     double change = amountPaid - totalAmount;
     if (change >= 0) {
-        std::cout << "Change: $" << std::fixed << std::setprecision(2) << change << std::endl;
+        std::cout << "So tien tra lai: $" << std::fixed << std::setprecision(2) << change << std::endl;
     } else {
-        std::cout << "Failed to pay. Insufficient funds." << std::endl;
+        std::cout << "Thanh toan khong thanh cong. Khong đu tien." << std::endl;
     }
 }
